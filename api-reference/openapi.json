@@ -4,19 +4,14 @@
     "version": "1.0.0",
     "title": "Proced AI API"
   },
-  "servers": [
-    {
-      "url": "http://localhost:3002"
-    }
-  ],
   "security": [
     {
-      "bearerAuth": []
+      "Bearer": []
     }
   ],
   "components": {
     "securitySchemes": {
-      "bearerAuth": {
+      "Bearer": {
         "type": "http",
         "scheme": "bearer"
       }
@@ -33,7 +28,10 @@
             "type": "string"
           }
         },
-        "required": ["id", "name"]
+        "required": [
+          "id",
+          "name"
+        ]
       },
       "UserSchema": {
         "type": "object",
@@ -49,7 +47,11 @@
             "type": "string"
           }
         },
-        "required": ["id", "name", "email"]
+        "required": [
+          "id",
+          "name",
+          "email"
+        ]
       },
       "ProjectSchema": {
         "type": "object",
@@ -62,7 +64,10 @@
             "type": "string"
           }
         },
-        "required": ["id", "name"]
+        "required": [
+          "id",
+          "name"
+        ]
       },
       "ProcedureCommentSchema": {
         "type": "object",
@@ -77,7 +82,11 @@
             "type": "string"
           }
         },
-        "required": ["id", "text", "createdAt"]
+        "required": [
+          "id",
+          "text",
+          "createdAt"
+        ]
       },
       "ProcedureSchema": {
         "type": "object",
@@ -97,12 +106,21 @@
           },
           "priority": {
             "type": "string",
-            "enum": ["LOW", "MEDIUM", "HIGH"],
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH"
+            ],
             "example": "MEDIUM"
           },
           "state": {
             "type": "string",
-            "enum": ["TODO", "IN_PROGRESS", "COMPLETED", "WAITING"],
+            "enum": [
+              "TODO",
+              "IN_PROGRESS",
+              "COMPLETED",
+              "WAITING"
+            ],
             "example": "TODO"
           },
           "content": {
@@ -212,10 +230,56 @@
                 "example": 50
               }
             },
-            "required": ["total"]
+            "required": [
+              "total"
+            ]
           }
         },
-        "required": ["data", "meta"]
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "UpdateProcedureBodySchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Proced AI title"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH"
+            ],
+            "example": "MEDIUM"
+          },
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "example": "Procedure content goes here."
+          },
+          "categoryId": {
+            "type": "string",
+            "nullable": true,
+            "example": "cm2uqwcpd002s7xta3b1j8q3p"
+          },
+          "doerId": {
+            "type": "string",
+            "nullable": true,
+            "example": "cm2uj5ffn001x7xtag73jmpx0"
+          },
+          "dueAt": {
+            "type": "string",
+            "example": "2024-09-22T22:00:00.000Z"
+          },
+          "projectId": {
+            "type": "string",
+            "example": "cm2uj5ffn001x7xtag73jmpx0"
+          }
+        }
       },
       "DeleteSchema": {
         "type": "object",
@@ -225,7 +289,9 @@
             "example": true
           }
         },
-        "required": ["success"]
+        "required": [
+          "success"
+        ]
       },
       "HealthSchema": {
         "type": "object",
@@ -240,16 +306,24 @@
                     "type": "boolean"
                   }
                 },
-                "required": ["healthy"]
+                "required": [
+                  "healthy"
+                ]
               }
             },
-            "required": ["api"]
+            "required": [
+              "api"
+            ]
           }
         },
-        "required": ["data"]
+        "required": [
+          "data"
+        ]
       }
     },
-    "parameters": {}
+    "parameters": {
+      
+    }
   },
   "paths": {
     "/procedures": {
@@ -289,7 +363,12 @@
           {
             "schema": {
               "type": "string",
-              "enum": ["createdAt", "dueAt", "project.name", "name"],
+              "enum": [
+                "createdAt",
+                "dueAt",
+                "project.name",
+                "name"
+              ],
               "description": "Sort by",
               "example": "dueAt"
             },
@@ -369,7 +448,11 @@
                       "example": "123e4567-e89b-12d3-a456-426655440000"
                     }
                   },
-                  "required": ["code", "message", "requestId"]
+                  "required": [
+                    "code",
+                    "message",
+                    "requestId"
+                  ]
                 }
               }
             }
@@ -380,6 +463,17 @@
     "/procedures/{id}": {
       "get": {
         "summary": "Get Procedure",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "cm0upgshc000rwf5eop1u2awr"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Retrieve procedure",
@@ -411,7 +505,75 @@
                       "example": "123e4567-e89b-12d3-a456-426655440000"
                     }
                   },
-                  "required": ["code", "message", "requestId"]
+                  "required": [
+                    "code",
+                    "message",
+                    "requestId"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Procedure",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "cm0upgshc000rwf5eop1u2awr"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProcedureBodySchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update procedure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcedureSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "disconnected"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "requestId"
+                  ]
                 }
               }
             }
@@ -420,6 +582,17 @@
       },
       "delete": {
         "summary": "Delete Procedure",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "cm0upgshc000rwf5eop1u2awr"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Delete procedure",
@@ -451,7 +624,11 @@
                       "example": "123e4567-e89b-12d3-a456-426655440000"
                     }
                   },
-                  "required": ["code", "message", "requestId"]
+                  "required": [
+                    "code",
+                    "message",
+                    "requestId"
+                  ]
                 }
               }
             }
@@ -493,7 +670,11 @@
                       "example": "123e4567-e89b-12d3-a456-426655440000"
                     }
                   },
-                  "required": ["code", "message", "requestId"]
+                  "required": [
+                    "code",
+                    "message",
+                    "requestId"
+                  ]
                 }
               }
             }
