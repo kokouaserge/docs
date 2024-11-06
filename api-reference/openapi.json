@@ -1,16 +1,12 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "title": "Proced AI API"
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "http://localhost:3002"
     }
   ],
   "security": [
@@ -18,177 +14,491 @@
       "bearerAuth": []
     }
   ],
-  "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
   "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
     "securitySchemes": {
-      "bearerAuth": {
+      "Bearer": {
         "type": "http",
         "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "CategorySchema": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "name"]
+      },
+      "UserSchema": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "email"]
+      },
+      "ProjectSchema": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "name"]
+      },
+      "ProcedureCommentSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "text", "createdAt"]
+      },
+      "ProcedureSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm0upgshc000rwf5eop1u2awr"
+          },
+          "shortId": {
+            "type": "string",
+            "nullable": true,
+            "example": "cm0upgshc000rwf5eop1u2awr"
+          },
+          "name": {
+            "type": "string",
+            "example": "Proced AI title"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["LOW", "MEDIUM", "HIGH"],
+            "example": "MEDIUM"
+          },
+          "state": {
+            "type": "string",
+            "enum": ["TODO", "IN_PROGRESS", "COMPLETED", "WAITING"],
+            "example": "TODO"
+          },
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "example": "Procedure content goes here."
+          },
+          "categoryId": {
+            "type": "string",
+            "nullable": true,
+            "example": "cm2uqwcpd002s7xta3b1j8q3p"
+          },
+          "doerId": {
+            "type": "string",
+            "nullable": true,
+            "example": "cm2uj5ffn001x7xtag73jmpx0"
+          },
+          "creatorId": {
+            "type": "string",
+            "example": "cm2uj5ffn001x7xtag73jmpx0"
+          },
+          "position": {
+            "type": "number",
+            "example": 1
+          },
+          "dueAt": {
+            "type": "string",
+            "example": "2024-09-22T22:00:00.000Z"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-09-22T22:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2024-09-22T22:00:00.000Z"
+          },
+          "projectId": {
+            "type": "string",
+            "example": "cm2uj5ffn001x7xtag73jmpx0"
+          },
+          "workspaceId": {
+            "type": "string",
+            "example": "cm2uj5ffn001x7xtag73jmpx0"
+          },
+          "captureId": {
+            "type": "string",
+            "nullable": true,
+            "example": "cm2uqwcpd002s7xta3b1j8q3p"
+          },
+          "displayVideo": {
+            "type": "boolean",
+            "example": true
+          },
+          "isFineTunedData": {
+            "type": "boolean",
+            "example": false
+          },
+          "category": {
+            "$ref": "#/components/schemas/CategorySchema"
+          },
+          "doer": {
+            "$ref": "#/components/schemas/UserSchema"
+          },
+          "project": {
+            "$ref": "#/components/schemas/ProjectSchema"
+          },
+          "comments": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ProcedureCommentSchema"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "priority",
+          "state",
+          "creatorId",
+          "position",
+          "dueAt",
+          "createdAt",
+          "updatedAt",
+          "projectId",
+          "workspaceId",
+          "displayVideo",
+          "isFineTunedData"
+        ]
+      },
+      "ProceduresSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProcedureSchema"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "number",
+                "description": "Meta data",
+                "example": 50
+              }
+            },
+            "required": ["total"]
+          }
+        },
+        "required": ["data", "meta"]
+      },
+      "DeleteSchema": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": ["success"]
+      },
+      "HealthSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "api": {
+                "type": "object",
+                "properties": {
+                  "healthy": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["healthy"]
+              }
+            },
+            "required": ["api"]
+          }
+        },
+        "required": ["data"]
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/procedures": {
+      "get": {
+        "summary": "Get Procedures",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Search query",
+              "example": "Proced AI create procedure"
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Size by page ",
+              "example": "50"
+            },
+            "required": false,
+            "name": "size",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Page for pagination results",
+              "example": "1"
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": ["createdAt", "dueAt", "project.name", "name"],
+              "description": "Sort by",
+              "example": "dueAt"
+            },
+            "required": false,
+            "name": "sortBy",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "filter by categoryId",
+              "example": "cm2uqwcpd002s7xta3b1j8q3p"
+            },
+            "required": false,
+            "name": "categoryId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "filter by doerId",
+              "example": "cm2uqwcpd002s7xta3b1j8q3p"
+            },
+            "required": false,
+            "name": "doerId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "startedAt filter by started date",
+              "example": "2023-03-15T00:00:00.000Z"
+            },
+            "required": false,
+            "name": "startedAt",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "dueAt filter by ended date",
+              "example": "2023-03-15T00:00:00.000Z"
+            },
+            "required": false,
+            "name": "dueAt",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve procedures",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProceduresSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "disconnected"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procedures/{id}": {
+      "get": {
+        "summary": "Get Procedure",
+        "responses": {
+          "200": {
+            "description": "Retrieve procedure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcedureSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "disconnected"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Procedure",
+        "responses": {
+          "200": {
+            "description": "Delete procedure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "disconnected"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "responses": {
+          "200": {
+            "description": "Retrieve health",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "disconnected"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
